@@ -3,6 +3,7 @@
 const Index = () => {
     return ( 
         <>
+        index
         </>
     );
 }
