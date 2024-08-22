@@ -1,6 +1,7 @@
 import {Link,useParams} from 'react-router-dom';
 import { useState } from 'react';
 import Perks from './Perk.jsx';
+import axios from 'axios';
 
 const Own = () => {
     const {action}=useParams();
@@ -21,6 +22,15 @@ const Own = () => {
                 <p className='text-gray-500 text-sm'>{desc}</p>
             </div>
         )
+    }
+    const getByLink=async(ev) =>{
+        ev.preventDefault();
+      const {data:filename}=await axios.post('/upload-by-link',{link:photoLink})
+      setPhotos(prev=>{
+          return [...prev,filename];
+        });
+      setPhotoLink('');
+    
     }
 
     return ( 
@@ -50,10 +60,16 @@ const Own = () => {
                     {head('Photos','More the merrier')}
                     <div className='flex gap-2'>
                         <input type="text" placeholder={'add via link'} value={photoLink} onChange={(e)=>{setPhotoLink(e.target.value)}}  />
-                        <button className='px-4 rounded-2xl'>Upload from link</button>
+                        <button className='px-4 rounded-2xl' onClick={getByLink}>Upload from link</button>
                     </div>
-                    <div className='mt-2 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6'>
-                        <button className='border bg-transparent rounded-2xl p-8 text-2xl text-gray-600 flex justify-center gap-1'>
+
+                    <div className='mt-2 grid gap-2 grid-cols-3 md:grid-cols-4 lg:grid-cols-6'>
+                    {photos.length > 0 && photos.map(photo=>(
+                        <div>
+                           <img className='rounded-2xl' src={'http://localhost:4000/uploads/'+photo} alt="" />
+                        </div>
+                    ))}
+                        <button className='flex items-center border bg-transparent rounded-2xl p-2 text-2xl text-gray-600 flex justify-center gap-1'>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-8">
                                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
                             </svg>
