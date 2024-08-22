@@ -55,17 +55,17 @@ app.post('/login',async (req, res)=>{
 
 app.get('/profile',(req, res) => {
    const {token} = req.cookies;
-//    res.json("ok");
+
     if(token)
     {
-        jwt.verify(token,secretJWT,{},(err,user)=>{
+        jwt.verify(token,secretJWT,{},async(err,userData)=>{
             if(err)
                 throw err;
-            else
-            res.json(user);
+            const {name,email,_id}=await UserModel.findOne({email:userData.email});
+            res.json({name,email,_id});
         });
     }
-   res.json({token});
+   
 });
 
 app.listen(4000);
