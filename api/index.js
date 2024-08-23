@@ -8,6 +8,7 @@ const imageDownloader=require('image-downloader');
 const multer=require('multer');
 const fs=require('fs');
 const UserModel = require('./models/user.js');
+const PlaceModel = require('./models/place.js');
 require('dotenv').config();
 const app=express();
 
@@ -99,6 +100,10 @@ app.post('/upload', photoMiddle.array('photos',100), (req, res) => {
     }
     res.json(uploadedFiles);
     
+})
+
+app.post('/addplace',(req,res)=>{
+
 })
 
 app.get('/test',(req,res)=>{
