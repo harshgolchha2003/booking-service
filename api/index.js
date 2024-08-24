@@ -102,9 +102,89 @@ app.post('/upload', photoMiddle.array('photos',100), (req, res) => {
     
 })
 
-app.post('/addplace',(req,res)=>{
+// app.post('/add-place',(req,res)=>{
+//     const {token} = req.cookies;
+//     const {title,
+//         address,
+//         description,
+//         photos,
+//         perks,
+//         extraInfo,
+//         checkIn,
+//         checkOut,
+//         maxGuest} =req.body;
+//     jwt.verify(token,secretJWT,{},async(err,userData)=>{
+//         if(err)
+//             throw err;
+//        const place= await PlaceModel.create({
+//             owner:userData.id,
+//             title: title,
+//             address: address,
+//             description: description,
+//             photos: photos,
+//             perks:perks,
+//             extraInfo: extraInfo,
+//             checkIn: checkIn,
+//             checkOut: checkOut,
+//             maxGuest: maxGuest,
+//         })
+        
+//     });
+//     res.json(place);
 
-})
+    
+// })
+
+
+app.post('/add-place', (req, res) => {
+    const { token } = req.cookies;
+    const {
+        title,
+        address,
+        description,
+        photos,
+        perks,
+        extraInfo,
+        checkIn,
+        checkOut,
+        maxGuest,
+    } = req.body;
+
+    jwt.verify(token, secretJWT, {}, async (err, userData) => {
+        if (err) {
+            console.error('JWT verification failed:', err);
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+
+        try {
+            const place = await PlaceModel.create({
+                owner: userData.id,
+                title,
+                address,
+                description,
+                photos,
+                perks,
+                extraInfo,
+                checkIn,
+                checkOut,
+                maxGuest,
+            });
+            return res.json(place);
+        } catch (err) {
+            console.error('Error creating place:', err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+    });
+});
+
+
+app.get('/places',async(req,res) =>{
+    const { token } = req.cookies;
+    jwt.verify(token, secretJWT, {}, async (err, userData) => {
+        const {id}=userData;
+        res.json(await PlaceModel.find({owner:id}));
+    })
+});
 
 app.get('/test',(req,res)=>{
     res.json("ok");
