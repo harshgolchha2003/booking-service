@@ -22,12 +22,20 @@ const Own = () => {
                 Add new place
                 </Link>
             </div>  
-            <div>
-                {places.length>0 && places.map(place=>(
-                    <div key={place}>
-                        <h3>{place.title}</h3>
-                       
-                    </div>
+            <div className='mt-4' >
+                {places.length > 0 && places.map(place=>(
+                    <Link to={'/account/own/'+place._id} key={place} className='flex cursor-pointer bg-gray-100 gap-4 p-4 rounded-2xl'>
+                       <div className=' size-32 bg-gray-300 grow shrink-0 '>
+                             {places.photos && places.photos.length>0  && (
+                                <img className="" src={places.photos[0]}/>
+                            )} 
+                       </div>
+                       <div className='grow-0 shrink'>
+
+                        <h2 className='text-xl '>{place.title}</h2>
+                        <p className='text-sm mt-2'>{place.description}</p>
+                       </div>
+                </Link>
                 ))}
 
             </div>   

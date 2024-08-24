@@ -178,12 +178,16 @@ app.post('/add-place', (req, res) => {
 });
 
 
-app.get('/places',async(req,res) =>{
+app.get('/places',(req,res) =>{
     const { token } = req.cookies;
     jwt.verify(token, secretJWT, {}, async (err, userData) => {
         const {id}=userData;
         res.json(await PlaceModel.find({owner:id}));
     })
+});
+
+app.get('/places/:id',async(req,res) =>{
+    res.json(await PlaceModel.findById(req.params.id));
 });
 
 app.get('/test',(req,res)=>{

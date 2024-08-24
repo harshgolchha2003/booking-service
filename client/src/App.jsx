@@ -23,6 +23,7 @@ const App=()=> {
       <Route path="/account" element={<Account/>} />
       <Route path="/account/own" element={<Own/>} />
       <Route path="/account/own/new" element={<AddPlace/>} />
+      <Route path="/account/own/:id" element={<AddPlace/>} />
       </Route>
     </Routes>
    </UserContextProvider>

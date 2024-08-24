@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
+import { useParams,Navigate } from 'react-router-dom';
 import axios from 'axios';
 import Perks from './Perk.jsx';
 import Uploadphotos from './AddPhoto.jsx';
 import AccountNavBar from './AccountNavBar.jsx';
-import { Navigate } from 'react-router-dom';
 const AddPlace = () => {
+    const {id}=useParams();
     const [title,setTitle]=useState('');
     const [address,setAddress]=useState('');
     const [description,setDescription]=useState('');
@@ -15,6 +16,22 @@ const AddPlace = () => {
     const [checkOut,setCheckOut]=useState('');
     const [maxGuest,setMaxGuest]=useState('');
     const [reDirect,setDirect]=useState(false);
+    useEffect(()=>{
+        if(!id)return;
+        if(id){
+            axios.get('/places/'+id).then(({data})=>{
+                setTitle(data.title);
+                setAddress(data.address);
+                setDescription(data.description);
+                setPhotos(data.photos);
+                setPerks(data.perks);
+                setExtraInfo(data.extraInfo);
+                setCheckIn(data.checkIn);
+                setCheckOut(data.checkOut);
+                setMaxGuest(data.maxGuest);
+            });
+        }
+    },[id]);
     const head=(title,desc)=>{
         return (
             <div>
