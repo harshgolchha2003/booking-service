@@ -102,47 +102,13 @@ app.post('/upload', photoMiddle.array('photos',100), (req, res) => {
     
 })
 
-// app.post('/add-place',(req,res)=>{
-//     const {token} = req.cookies;
-//     const {title,
-//         address,
-//         description,
-//         photos,
-//         perks,
-//         extraInfo,
-//         checkIn,
-//         checkOut,
-//         maxGuest} =req.body;
-//     jwt.verify(token,secretJWT,{},async(err,userData)=>{
-//         if(err)
-//             throw err;
-//        const place= await PlaceModel.create({
-//             owner:userData.id,
-//             title: title,
-//             address: address,
-//             description: description,
-//             photos: photos,
-//             perks:perks,
-//             extraInfo: extraInfo,
-//             checkIn: checkIn,
-//             checkOut: checkOut,
-//             maxGuest: maxGuest,
-//         })
-        
-//     });
-//     res.json(place);
-
-    
-// })
-
-
 app.post('/add-place', (req, res) => {
     const { token } = req.cookies;
     const {
         title,
         address,
-        description,
         photos,
+        description,
         perks,
         extraInfo,
         checkIn,
@@ -161,8 +127,8 @@ app.post('/add-place', (req, res) => {
                 owner: userData.id,
                 title,
                 address,
-                description,
                 photos,
+                description,
                 perks,
                 extraInfo,
                 checkIn,
@@ -177,6 +143,42 @@ app.post('/add-place', (req, res) => {
     });
 });
 
+app.put('/save-place/:id', async(req, res) => {
+    const { token } = req.cookies;
+    const {
+        id,
+        title,
+        address,
+        description,
+        photos,
+        perks,
+        extraInfo,
+        checkIn,
+        checkOut,
+        maxGuest,
+    } = req.body;
+    jwt.verify(token, secretJWT, {}, async (err, userData) => {
+        if(err)throw err;
+        const placeInfo= await PlaceModel.findById(id);
+        if(userData.id==placeInfo.owner){
+        
+            placeInfo.set({
+                title,
+                address,
+                description,
+                photos,
+                perks,
+                extraInfo,
+                checkIn,
+                checkOut,
+                maxGuest,
+            })
+            await placeInfo.save();
+            res.json('ok');
+        }
+    })
+})
+
 
 app.get('/places',(req,res) =>{
     const { token } = req.cookies;
@@ -189,6 +191,7 @@ app.get('/places',(req,res) =>{
 app.get('/places/:id',async(req,res) =>{
     res.json(await PlaceModel.findById(req.params.id));
 });
+
 
 app.get('/test',(req,res)=>{
     res.json("ok");

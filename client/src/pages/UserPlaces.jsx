@@ -25,10 +25,11 @@ const Own = () => {
             <div className='mt-4' >
                 {places.length > 0 && places.map(place=>(
                     <Link to={'/account/own/'+place._id} key={place} className='flex cursor-pointer bg-gray-100 gap-4 p-4 rounded-2xl'>
-                       <div className=' size-32 bg-gray-300 grow shrink-0 '>
-                             {places.photos && places.photos.length>0  && (
-                                <img className="" src={places.photos[0]}/>
-                            )} 
+                       <div className='flex w-32 h-32 bg-gray-300 grow shrink-0 '>
+                             {place.photos.length>0  && (
+                                <img className="object-cover" src={'http://localhost:4000/uploads/'+place.photos[0]}/>
+                            )
+                            } 
                        </div>
                        <div className='grow-0 shrink'>
 

@@ -41,19 +41,29 @@ const AddPlace = () => {
         )
     }
 
-    const addNewPlace = async (ev) => {
+    const savePlace = async (ev) => {
         ev.preventDefault();
         const data = {
-            title,
-            address,
-            photos,
-            description,
-            perks,
-            extraInfo,
-            checkIn,
-            checkOut,
-            maxGuest,
-        };
+       title,
+       address,
+       photos,
+       description,
+       perks,
+       extraInfo,
+       checkIn,
+       checkOut,
+       maxGuest,
+   };
+        if(id){
+            try {
+                const { data: file } = await axios.put('/save-place/'+id, {...data,id});
+                console.log(file);
+                setDirect(true);
+            } catch (error) {
+                console.error('Error adding place:', error);
+            }
+        }
+        else {
     
         try {
             const { data: file } = await axios.post('/add-place', data);
@@ -61,7 +71,7 @@ const AddPlace = () => {
             setDirect(true);
         } catch (error) {
             console.error('Error adding place:', error);
-        }
+        }}
     };
     
 
@@ -76,7 +86,7 @@ const AddPlace = () => {
         <>
         <AccountNavBar/>
             <div>
-                <form onSubmit={addNewPlace}>
+                <form onSubmit={savePlace}>
                     {head('Title',"title for your place should be short and catchy as in advertisment")}
                     <input type="text" placeholder="title" value={title} onChange={(e)=>{setTitle(e.target.value)}} />
                     
@@ -113,7 +123,7 @@ const AddPlace = () => {
 
                     </div>
                     
-                        <button className='primary my-4'> Add Place</button>
+                        <button className='primary my-4'> Save Place</button>
                     
                 </form>
             </div>
