@@ -17,7 +17,7 @@ const Place = () => {
        show?(<div className='absolute inset-0 bg-black text-white min-h-screen'>
             <div className='p-8 grid gap-4 bg-black'>
               <div>
-                <h2 className='text-3xl mr-36'>photos of {place.title}</h2>
+                <h2 className='text-3xl mr-48'>photos of {place.title}</h2>
                 <button onClick={()=>setShow(false)} className='fixed rounded-2xl right-14 hover:bg-primary '>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />

@@ -9,6 +9,7 @@ const multer=require('multer');
 const fs=require('fs');
 const UserModel = require('./models/user.js');
 const PlaceModel = require('./models/place.js');
+const BookingModel = require('./models/booking.js');
 require('dotenv').config();
 const app=express();
 
@@ -79,6 +80,7 @@ app.post('/logout',(req, res) => {
     res.cookie('token','').json(true);
 });
 
+// USER_PLACES
 app.post('/upload-by-link',async(req, res) => {
     const {link} = req.body;
     const newName = Date.now()+'.jpg';
@@ -89,7 +91,6 @@ app.post('/upload-by-link',async(req, res) => {
     res.json(newName);
 })
 
-// USER_PLACES
 const photoMiddle=multer({dest:'uploads/'});
 app.post('/upload', photoMiddle.array('photos',100), (req, res) => {
     const uploadedFiles=[];
@@ -108,15 +109,9 @@ app.post('/upload', photoMiddle.array('photos',100), (req, res) => {
 app.post('/add-place', (req, res) => {
     const { token } = req.cookies;
     const {
-        title,
-        address,
-        photos,
-        description,
-        perks,
-        extraInfo,
-        checkIn,
-        checkOut,
-        maxGuest,
+        title, address, photos,
+        description, perks, extraInfo,
+        checkIn, checkOut, maxGuest,
         price,
     } = req.body;
 
@@ -128,17 +123,10 @@ app.post('/add-place', (req, res) => {
 
         try {
             const place = await PlaceModel.create({
-                owner: userData.id,
-                title,
-                address,
-                photos,
-                description,
-                perks,
-                extraInfo,
-                checkIn,
-                checkOut,
-                maxGuest,
-                price,
+                owner: userData.id, title, address,
+                photos, description, perks,
+                extraInfo, checkIn, checkOut,
+                maxGuest, price,
             });
             return res.json(place);
         } catch (err) {
@@ -151,17 +139,10 @@ app.post('/add-place', (req, res) => {
 app.put('/save-place/:id', async(req, res) => {
     const { token } = req.cookies;
     const {
-        id,
-        title,
-        address,
-        description,
-        photos,
-        perks,
-        extraInfo,
-        checkIn,
-        checkOut,
-        maxGuest,
-        price,
+        id, title, address,
+        description, photos, perks,
+        extraInfo, checkIn, checkOut,
+        maxGuest, price,
     } = req.body;
     jwt.verify(token, secretJWT, {}, async (err, userData) => {
         if(err)throw err;
@@ -169,15 +150,9 @@ app.put('/save-place/:id', async(req, res) => {
         if(userData.id==placeInfo.owner){
         
             placeInfo.set({
-                title,
-                address,
-                description,
-                photos,
-                perks,
-                extraInfo,
-                checkIn,
-                checkOut,
-                maxGuest,
+                title,address,description,
+                photos,perks,extraInfo,
+                checkIn,checkOut,maxGuest,
                 price,
             })
             await placeInfo.save();
@@ -195,17 +170,29 @@ app.get('/places',(req,res) =>{
     })
 });
 
-app.get('/places/:id',async(req,res) =>{
-    res.json(await PlaceModel.findById(req.params.id));
-});
 
 //PLACE_DISPLAY
 app.get('/place-display',async(req,res) =>{
     res.json(await PlaceModel.find());
 });
 
+app.get('/places/:id',async(req,res) =>{
+    res.json(await PlaceModel.findById(req.params.id));
+});
 
-
+//BOOKING
+app.post('/booking',async(req,res)=>{
+    const {place,checkIn,checkOut,
+        name,phone,price,guests}=req.body;
+        try {
+            const placeBook = await BookingModel.create({place,checkIn,
+                checkOut,name,phone,price,guests});
+             res.json(placeBook);
+        } catch (err) {
+            console.error('Error creating place:', err);
+             res.status(500).json({ error: 'Internal Server Error' });
+        }
+});
 
 
 
