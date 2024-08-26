@@ -15,6 +15,7 @@ const AddPlace = () => {
     const [checkIn,setCheckIn]=useState('');
     const [checkOut,setCheckOut]=useState('');
     const [maxGuest,setMaxGuest]=useState('');
+    const [price,setPrice]=useState('');
     const [reDirect,setDirect]=useState(false);
     useEffect(()=>{
         if(!id)return;
@@ -29,6 +30,7 @@ const AddPlace = () => {
                 setCheckIn(data.checkIn);
                 setCheckOut(data.checkOut);
                 setMaxGuest(data.maxGuest);
+                setPrice(data.price);
             });
         }
     },[id]);
@@ -53,6 +55,7 @@ const AddPlace = () => {
        checkIn,
        checkOut,
        maxGuest,
+       price,
    };
         if(id){
             try {
@@ -106,7 +109,7 @@ const AddPlace = () => {
                     <textarea value={extraInfo} onChange={(e)=>{setExtraInfo(e.target.value)}} />
 
                     {head('Check-in & Check-out','dont forget to maintain the hygiene')}
-                    <div className='grid gap-2 sm:grid-cols-3'>
+                    <div className='grid gap-2 grid-cols-2 md:grid-cols-4'>
 
                     <div>
                         <h3 className="mt-2 -mb-1">Check-In</h3>
@@ -120,8 +123,13 @@ const AddPlace = () => {
                         <h3 className="mt-2 -mb-1">Max-guests</h3>
                         <input type="number" placeholder='5' value={maxGuest} onChange={(e)=>{setMaxGuest(e.target.value)}}  />
                     </div>
+                    <div>
+                        <h3 className="mt-2 -mb-1">Price per night</h3>
+                        <input type="number" placeholder='$200' value={price} onChange={(e)=>{setPrice(e.target.value)}}  />
+                    </div>
 
                     </div>
+
                     
                         <button className='primary my-4'> Save Place</button>
                     

@@ -11,7 +11,8 @@ const PlaceSchema = new Schema({
     extraInfo: { type: String },
     checkIn: { type: Number, required: true },
     checkOut: { type: Number, required: true },
-    maxGuest: { type: Number, required: true, min: 1, default: 1 }
+    maxGuest: { type: Number, required: true, min: 1, default: 1 },
+    price: { type: Number, min: 0 }
 });
 
 const PlaceModel = mongoose.model('Place', PlaceSchema);

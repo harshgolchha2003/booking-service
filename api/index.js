@@ -23,8 +23,10 @@ app.use(cors({
     origin:'http://localhost:5173',
 }));
 
-// console.log(process.env.MONGODB_URL)
 mongoose.connect(process.env.MONGODB_URL);
+
+//USER
+
 app.post('/register',async (req, res)=>{
     const {name,email,password}=req.body;
     try{
@@ -87,6 +89,7 @@ app.post('/upload-by-link',async(req, res) => {
     res.json(newName);
 })
 
+// USER_PLACES
 const photoMiddle=multer({dest:'uploads/'});
 app.post('/upload', photoMiddle.array('photos',100), (req, res) => {
     const uploadedFiles=[];
@@ -114,6 +117,7 @@ app.post('/add-place', (req, res) => {
         checkIn,
         checkOut,
         maxGuest,
+        price,
     } = req.body;
 
     jwt.verify(token, secretJWT, {}, async (err, userData) => {
@@ -134,6 +138,7 @@ app.post('/add-place', (req, res) => {
                 checkIn,
                 checkOut,
                 maxGuest,
+                price,
             });
             return res.json(place);
         } catch (err) {
@@ -156,6 +161,7 @@ app.put('/save-place/:id', async(req, res) => {
         checkIn,
         checkOut,
         maxGuest,
+        price,
     } = req.body;
     jwt.verify(token, secretJWT, {}, async (err, userData) => {
         if(err)throw err;
@@ -172,9 +178,10 @@ app.put('/save-place/:id', async(req, res) => {
                 checkIn,
                 checkOut,
                 maxGuest,
+                price,
             })
             await placeInfo.save();
-            res.json('ok');
+            res.json('saved');
         }
     })
 })
@@ -192,7 +199,15 @@ app.get('/places/:id',async(req,res) =>{
     res.json(await PlaceModel.findById(req.params.id));
 });
 
+//PLACE_DISPLAY
+app.get('/place-display',async(req,res) =>{
+    res.json(await PlaceModel.find());
+});
 
+
+
+
+//DEV_TEST
 app.get('/test',(req,res)=>{
     res.json("ok");
 })
