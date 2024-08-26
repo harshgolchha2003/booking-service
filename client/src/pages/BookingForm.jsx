@@ -19,7 +19,7 @@ const BookingForm = ({place}) => {
       alert('Please fill all the required fields correctly');
       return;
     }
-    const dataSend={checkIn,checkOut,guest,name,phone,place:place._id,price:duration*place.price,guests:guest}
+    const dataSend={checkIn,checkOut,guest,name,phone,place:place._id,price:duration*place.price,guests:guest,ownedBy:place.owner}
     
     alert(`Total price: $${duration*place.price}`);
     try{
@@ -28,9 +28,14 @@ const BookingForm = ({place}) => {
       alert('Booking successful');
     }
     catch(e){
-      alert('Failed to book the place. Please try again later',e);
+      if (e.response) {
+        alert(`Error: ${e.response.data.error || 'Something went wrong'}`);
+    } else if (e.request) {
+        alert('Error: No response received from the server. Please try again.');
+    } else {
+        alert('Error: ' + e.message);
     }
-   
+    }
   }
   if(reDirect) return <Navigate to={reDirect} />;
   return ( 

@@ -182,16 +182,24 @@ app.get('/places/:id',async(req,res) =>{
 
 //BOOKING
 app.post('/booking',async(req,res)=>{
+    const { token } = req.cookies;
     const {place,checkIn,checkOut,
-        name,phone,price,guests}=req.body;
-        try {
+        name,phone,price,guests,ownedBy}=req.body;
+jwt.verify(token, secretJWT, {}, async (err, userData) => {
+    const {id}=userData;
+    
+    try {
+            if(ownedBy==id){
+                throw new Error("Owner can't book use another account");
+            }
             const placeBook = await BookingModel.create({place,checkIn,
                 checkOut,name,phone,price,guests});
              res.json(placeBook);
         } catch (err) {
-            console.error('Error creating place:', err);
-             res.status(500).json({ error: 'Internal Server Error' });
+            // console.error('Error creating place:', err);
+             res.status(500).json({ error: err.message });
         }
+})
 });
 
 
