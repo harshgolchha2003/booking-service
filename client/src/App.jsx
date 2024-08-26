@@ -9,6 +9,7 @@ import Register from './pages/Register.jsx'
 import Account from './pages/UserAccount.jsx'
 import Own from './pages/UserPlaces.jsx';
 import AddPlace from './pages/AddPlace.jsx';
+import Place from './pages/Place.jsx';
 axios.defaults.baseURL = 'http://localhost:4000';
 axios.defaults.withCredentials = true;
 const App=()=> {
@@ -24,6 +25,7 @@ const App=()=> {
       <Route path="/account/own" element={<Own/>} />
       <Route path="/account/own/new" element={<AddPlace/>} />
       <Route path="/account/own/:id" element={<AddPlace/>} />
+      <Route path="/place/:id" element={<Place/>} />
       </Route>
     </Routes>
    </UserContextProvider>
