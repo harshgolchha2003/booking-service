@@ -13,12 +13,19 @@ const Login = () => {
         e.preventDefault();
         try{ 
         const {data}= await axios.post('/login',{email,password});
+        console.log(data);
         setUser(data);
         alert('Logged in successfully');
         setReDirect(true); 
         }
         catch(e){
-            alert("Invalid credentials");
+            if (e.response) {
+                alert(`Error: ${e.response.data.error || 'Something went wrong'}`);
+            } else if (e.request) {
+                alert('Error: No response received from the server. Please try again.');
+            } else {
+                alert('Error: ' + e.message);
+            }
         }
      }
      if(reDirect)return <Navigate to={"/"}/>

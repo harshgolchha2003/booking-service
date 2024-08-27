@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useState , useEffect,useContext} from "react";
+import { userContext } from "./UserContext.jsx";
 import {Navigate} from 'react-router-dom';
 import {differenceInCalendarDays} from "date-fns";
 import axios from 'axios';
@@ -10,6 +11,13 @@ const BookingForm = ({place}) => {
   const [name,setName] = useState(null);
   const [phone,setPhone] = useState(null);
   const [reDirect,setReDirect] = useState(null);
+  const {user}=useContext(userContext);
+  useEffect(()=>{
+    if(user){
+      setName(user.name);
+      
+    }
+  },[user]);
   let duration=0;
   if(checkIn&& checkOut){
     duration=differenceInCalendarDays(new Date(checkOut),new Date(checkIn));
@@ -24,7 +32,7 @@ const BookingForm = ({place}) => {
     alert(`Total price: $${duration*place.price}`);
     try{
      const {data}= await axios.post('/booking',dataSend);
-      setReDirect('/account/bookings/'+data._id);
+      setReDirect('/account/booking/'+data._id);
       alert('Booking successful');
     }
     catch(e){

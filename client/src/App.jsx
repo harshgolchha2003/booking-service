@@ -10,6 +10,8 @@ import Account from './pages/UserAccount.jsx'
 import Own from './pages/UserPlaces.jsx';
 import AddPlace from './pages/AddPlace.jsx';
 import Place from './pages/Place.jsx';
+import Booking from './pages/UserBookings.jsx';
+import SingleBook from './pages/SingleBook.jsx';
 axios.defaults.baseURL = 'http://localhost:4000';
 axios.defaults.withCredentials = true;
 const App=()=> {
@@ -26,6 +28,8 @@ const App=()=> {
       <Route path="/account/own/new" element={<AddPlace/>} />
       <Route path="/account/own/:id" element={<AddPlace/>} />
       <Route path="/place/:id" element={<Place/>} />
+      <Route path="/account/booking" element={<Booking/>} />
+      <Route path="/account/booking/:id" element={<SingleBook/>} />
       </Route>
     </Routes>
    </UserContextProvider>

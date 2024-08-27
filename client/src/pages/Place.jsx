@@ -2,6 +2,7 @@ import {useParams} from 'react-router-dom';
 import {useState, useEffect} from 'react';
 import axios from 'axios';
 import BookingForm from './BookingForm.jsx';
+import Display from './DisplayPhoto.jsx';
 const Place = () => {
     const {id}=useParams();
     const [place,setPlace] = useState(null);
@@ -38,18 +39,15 @@ const Place = () => {
   <a className='block font-semibold underline my-2' target="_blank" href={"https://maps.google.com/?q="+place.address}>{place.address}</a>
   <div className="grid gap-2 grid-cols-[2fr_1fr] rounded-2xl overflow-hidden">
     <div>
-      {place.photos?.[0] && (
-        <img className="aspect-square object-cover w-full h-full" src={'http://localhost:4000/uploads/'+place.photos[0]} alt="" />
-      )}
+      <Display place={place} ind={0} className="aspect-square object-cover w-full h-full"/>
+      
     </div>
     <div className='grid'>
-      {place.photos?.[1] && (
-        <img className="aspect-square object-cover w-full h-full" src={'http://localhost:4000/uploads/'+place.photos[1]} alt="" />
-      )}
+    <Display place={place} ind={1} className="aspect-square object-cover w-full h-full"/>
       <div className="overflow-hidden">
         {place.photos?.[2] && (
           <div className="relative top-2">
-            <img className="aspect-square object-cover w-full h-full" src={'http://localhost:4000/uploads/'+place.photos[2]} alt="" />
+            <Display place={place} ind={2} className="aspect-square object-cover w-full h-full"/>
             <button 
               className="absolute bottom-3 right-2 bg-primary text-white py-1 px-3 rounded-lg shadow-md"
               onClick={() => setShow(true)}

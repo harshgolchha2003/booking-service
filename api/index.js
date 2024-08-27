@@ -54,9 +54,23 @@ app.post('/login',async (req, res)=>{
                 res.cookie('token',token).json(user);
             })
         }
-        else res.status(422).json("Invalid Password");
+        else {
+            try {
+                throw new Error("Invalid Password");
+            }
+            catch(e){
+                res.status(422).json({error:e.message});
+            }
+        }
     }
-    else res.json("Invalid Email");
+    else {
+        try {
+            throw new Error("User not found");
+        }
+        catch(e){
+            res.status(422).json({error:e.message});
+        }
+    }
   
 });
 
@@ -171,6 +185,19 @@ app.get('/places',(req,res) =>{
 });
 
 
+app.get('/user-booking',(req,res)=>{
+    const { token } = req.cookies;
+   try{ jwt.verify(token, secretJWT, {}, async (err, userData) => {
+        if(err)throw err;
+        const {id}=userData;
+        res.json(await BookingModel.find({user:id}).populate('place'));
+    })}
+    catch(e){
+        res.json({error:e.message});
+    }
+})
+
+
 //PLACE_DISPLAY
 app.get('/place-display',async(req,res) =>{
     res.json(await PlaceModel.find());
@@ -186,17 +213,19 @@ app.post('/booking',async(req,res)=>{
     const {place,checkIn,checkOut,
         name,phone,price,guests,ownedBy}=req.body;
 jwt.verify(token, secretJWT, {}, async (err, userData) => {
-    const {id}=userData;
     
     try {
+        if(!userData)throw new Error("Login to book");
+        if(err)throw err;
+        const {id}=userData;
             if(ownedBy==id){
                 throw new Error("Owner can't book use another account");
             }
-            const placeBook = await BookingModel.create({place,checkIn,
+            const placeBook = await BookingModel.create({place,user:id,checkIn,
                 checkOut,name,phone,price,guests});
              res.json(placeBook);
         } catch (err) {
-            // console.error('Error creating place:', err);
+            
              res.status(500).json({ error: err.message });
         }
 })
